@@ -32,17 +32,26 @@ public class GameManager : Singleton<GameManager>
     /// Confirm Panel을 띄우는 메서드
     /// </summary>
     /// <param name="message"></param>
-    public void OpenConfirmPanel(string message)
+    public void OpenConfirmPanel(string message,
+        ConfirmPanelController.OnConfirmButtonClicked onConfirmButtonClicked)
     {
         if (_canvas != null)
         {
             var confirmPanelObject = Instantiate(confirmPanel, _canvas.transform);
-            confirmPanelObject.GetComponent<ConfirmPanelController>().Show(message);
+            confirmPanelObject.GetComponent<ConfirmPanelController>()
+                .Show(message, onConfirmButtonClicked);
         }
     }
 
     protected override void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         _canvas = FindFirstObjectByType<Canvas>();
+
+        if (scene.name == "Game")
+        {
+            // 블럭 초기화
+            var blockController = FindFirstObjectByType<BlockController>();
+            blockController.InintBlocks();
+        }
     }
 }
