@@ -9,6 +9,9 @@ public class Block : MonoBehaviour
     [SerializeField] private Sprite xSprite;
     [SerializeField] private SpriteRenderer markerSpriteRenderer;
 
+    public delegate void OnBlockClicked(int index);
+    private OnBlockClicked _onBlockClicked;
+
     // 마커 타입
     public enum MarkerType { None, o, x }
 
@@ -26,11 +29,12 @@ public class Block : MonoBehaviour
     }
 
     // 1. 초기화
-    public void InitMarker(int blockIndex)
+    public void InitMarker(int blockIndex, OnBlockClicked onBlockClicked)
     {
         _blockIndex = blockIndex;
         SetMarker(MarkerType.None); // 기본 타입으로 초기화
         SetBlockColor(_defaultBlockColor);    // 기본 색상으로 초기화
+        _onBlockClicked = onBlockClicked;
     }
 
     // 2. 마커 설정
@@ -64,5 +68,7 @@ public class Block : MonoBehaviour
             return;
         }
         Debug.Log("블럭 선택됨 : " +  _blockIndex);
+
+        _onBlockClicked?.Invoke(_blockIndex);
     }
 }
